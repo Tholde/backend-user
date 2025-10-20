@@ -15,7 +15,7 @@ declare global {
     }
 }
 
-const JWT_SECRET = process.env.JWT_SECRET || 'votre_super_secret_jwt_par_defaut';
+const JWT_SECRET = process.env.JWT_SECRET || 'tholdeIhany2025';
 
 /**
  * Middleware pour protéger les routes avec JWT.
