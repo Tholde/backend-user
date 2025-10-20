@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Affichage Progressif</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        #displayText {
+            font-size: 24px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="displayText"></div>
+
+    <script>
+        $(document).ready(function () {
+            let phrase = "Je suis un developpeur fullStack prêt pour tout les defis qui m'attent";
+            let index = 0;
+
+            let interval = setInterval(function () {
+                if (index < phrase.length) {
+                    $("#displayText").append(phrase[index]);
+                    index++;
+                } else {
+                    clearInterval(interval);
+                }
+            }, 100); // Affiche une lettre toutes les 100ms
+        });
+    </script>
+
+</body>
+</html>
