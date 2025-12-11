@@ -1,4 +1,5 @@
 import {NextFunction, Request, Response} from "express";
+<<<<<<< HEAD
 import {generateAuthToken, generateVerificationOrResetToken, getExpiryDate} from "../token/tokenGenerator";
 import UserModel from "../models/UserModels";
 import {IUser} from "../types/IUser";
@@ -19,6 +20,24 @@ const sendTokenResponse = (user: IUser, statusCode: number, res: Response) => {
     const token = generateAuthToken(user.id!);
 
     // Ne pas exposer le mot de passe et les tokens privés
+=======
+import * as bcrypt from "bcryptjs";
+import {IUser} from "../types/IUser";
+import UserModels from "../models/UserModels";
+import {dbGet, dbRun} from "../database/SQLiteConnection"; // Utilitaires pour les requêtes complexes de token (ex: resetPassword, verifyEmail)
+import {generateAuthToken, generateVerificationOrResetToken, getExpiryDate} from "../token/tokenGenerator";
+import {ErrorResponse} from "../utils/ErrorResponse";
+import logger from "../utils/logger";
+
+
+// --- Fonctions d'aide pour le JWT ---
+const sendEmail = (email: string, subject: string, text: string) => {
+    logger.info(`Email envoyé à ${email} - Subject: ${subject} - Corps: ${text}`);
+};
+
+const sendTokenResponse = (user: IUser, statusCode: number, res: Response) => {
+    const token = generateAuthToken(user.id!);
+>>>>>>> b13ebdf (add crud menu)
     const {password, resetPasswordToken, verificationToken, ...userPublic} = user;
 
     res.status(statusCode).json({
@@ -28,6 +47,10 @@ const sendTokenResponse = (user: IUser, statusCode: number, res: Response) => {
     });
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> b13ebdf (add crud menu)
 /**
  * @desc    Créer un utilisateur (Register) et envoie un email de vérification.
  * @route   POST /api/v1/auth/register
@@ -37,17 +60,27 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
     try {
         const {firstname, lastname, email, password, roleUser} = req.body;
 
+<<<<<<< HEAD
         // 1. Générer le token de vérification et l'expiration (1 heure)
         const verificationToken = generateVerificationOrResetToken();
         const verificationExpiresAt = getExpiryDate(60);
 
         // 2. Créer l'utilisateur (isActive: false par défaut)
         const userPublic = await UserModel.create({
+=======
+        // Préparation des tokens
+        const verificationToken = generateVerificationOrResetToken();
+        const verificationExpiresAt = getExpiryDate(60);
+
+        // Appel au Modèle: Le Modèle se charge du hachage, de la validation et de l'insertion sécurisée.
+        const userPublic = await UserModels.create({
+>>>>>>> b13ebdf (add crud menu)
             firstname,
             lastname,
             email,
             password,
             roleUser,
+<<<<<<< HEAD
             isActive: false, // Important : false par défaut
             verificationToken,
             verificationExpiresAt,
@@ -59,6 +92,13 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
         const verificationLink = `${req.protocol}://${req.get('host')}/api/v1/auth/verifyemail/${verificationToken}`;
         const emailText = `Votre code de vérification est: ${verificationToken}. Cliquez ici pour vérifier: ${verificationLink}`;
         console.log(emailText.toString());
+=======
+        } as IUser, verificationToken, verificationExpiresAt);
+
+        // Envoyer l'email
+        const verificationLink = `${req.protocol}://${req.get('host')}/api/v1/auth/verifyemail/${verificationToken}`;
+        const emailText = `Votre code de vérification est: ${verificationToken}. Cliquez ici pour vérifier: ${verificationLink}`;
+>>>>>>> b13ebdf (add crud menu)
         sendEmail(email, 'Vérification de compte', emailText);
 
         res.status(201).json({
@@ -68,6 +108,10 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
         });
 
     } catch (error) {
+<<<<<<< HEAD
+=======
+        // Le modèle gère déjà les erreurs 409 (Email existe) et 400 (Validation)
+>>>>>>> b13ebdf (add crud menu)
         next(error);
     }
 };
@@ -81,17 +125,23 @@ export const verifyEmail = async (req: Request, res: Response, next: NextFunctio
     try {
         const {token} = req.params;
 
+<<<<<<< HEAD
         const user = await dbGet<IUser>(`
             SELECT *
             FROM User
             WHERE verificationToken = ?
               AND verificationExpiresAt > datetime('now')
         `, [token]);
+=======
+        // Requête préparée pour éviter l'injection SQL (directement dans le contrôleur car le modèle n'a pas de méthode findByToken)
+        const user = await dbGet<IUser>(`SELECT * FROM Users WHERE verificationToken = ? AND verificationExpiresAt > datetime('now')`, [token]); // <-- Requête préparée sécurisée
+>>>>>>> b13ebdf (add crud menu)
 
         if (!user) {
             return next(new ErrorResponse("Code de vérification invalide ou expiré.", 400));
         }
 
+<<<<<<< HEAD
         // Mettre à jour l'utilisateur : isActive = true, clear tokens
         await UserModel.updateTokenFields(user.id!, {
             isActive: 1 as unknown as string, // SQLite stocke boolean comme 0/1
@@ -101,6 +151,18 @@ export const verifyEmail = async (req: Request, res: Response, next: NextFunctio
 
         // Simuler la récupération pour renvoyer la réponse
         const verifiedUser = await UserModel.findById(user.id!);
+=======
+        // Mise à jour via le Modèle (utilise requête préparée sécurisée)
+        await UserModels.updateTokenFields(user.id!, {
+            isActive: 1,
+            verificationToken: null,
+            verificationExpiresAt: null,
+            updatedAt: new Date().toISOString()
+        });
+
+        // Récupérer l'utilisateur à jour
+        const verifiedUser = await UserModels.findById(user.id!);
+>>>>>>> b13ebdf (add crud menu)
         if (!verifiedUser) return next(new ErrorResponse("Utilisateur introuvable.", 404));
 
         sendTokenResponse(verifiedUser, 200, res);
@@ -123,8 +185,13 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
             return next(new ErrorResponse("Veuillez fournir un email et un mot de passe.", 400));
         }
 
+<<<<<<< HEAD
         // 1. Vérifier l'utilisateur par email
         const user = await UserModel.findByEmail(email);
+=======
+        // 1. Vérifier l'utilisateur (méthode sécurisée)
+        const user = await UserModels.findByEmail(email);
+>>>>>>> b13ebdf (add crud menu)
         if (!user) {
             return next(new ErrorResponse("Identifiants invalides.", 401));
         }
@@ -140,9 +207,20 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
             return next(new ErrorResponse("Identifiants invalides.", 401));
         }
 
+<<<<<<< HEAD
         // 4. Mettre à jour lastLogin et envoyer le token
         await UserModel.updateTokenFields(user.id!, {lastLogin: new Date()});
         user.lastLogin = new Date(); // Mettre à jour l'objet local pour la réponse
+=======
+        // 4. Mettre à jour lastLogin (méthode sécurisée)
+        await UserModels.updateTokenFields(user.id!, {
+            lastLogin: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+        });
+
+        // Mettre à jour l'objet local
+        user.lastLogin = new Date().toISOString();
+>>>>>>> b13ebdf (add crud menu)
 
         sendTokenResponse(user, 200, res);
 
@@ -159,6 +237,7 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
 export const forgotPassword = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const {email} = req.body;
+<<<<<<< HEAD
         const user = await UserModel.findByEmail(email);
 
         if (!user) {
@@ -177,6 +256,29 @@ export const forgotPassword = async (req: Request, res: Response, next: NextFunc
         });
 
         // 3. Envoyer l'email
+=======
+
+        // 1. Chercher l'utilisateur par email (méthode sécurisée dans UserModel)
+        const user = await UserModels.findByEmail(email);
+
+        if (!user) {
+            // Envoyer un message générique même si l'utilisateur n'existe pas, pour la sécurité
+            return res.status(200).json({success: true, message: "Si l'utilisateur existe, un email a été envoyé."});
+        }
+
+        // 2. Générer le token de réinitialisation et l'expiration
+        const resetToken = generateVerificationOrResetToken();
+        const resetExpiresAt = getExpiryDate(60); // 60 minutes
+
+        // 3. Mettre à jour l'utilisateur (méthode sécurisée dans UserModel)
+        await UserModels.updateTokenFields(user.id!, {
+            resetPasswordToken: resetToken,
+            resetPasswordExpiresAt: resetExpiresAt,
+            updatedAt: new Date().toISOString()
+        });
+
+        // 4. Envoyer l'email
+>>>>>>> b13ebdf (add crud menu)
         const resetURL = `${req.protocol}://${req.get('host')}/api/v1/auth/resetpassword/${resetToken}`;
         const emailText = `Votre code de réinitialisation est: ${resetToken}. Lien de réinitialisation: ${resetURL}`;
         sendEmail(user.email, 'Réinitialisation de mot de passe', emailText);
@@ -184,6 +286,10 @@ export const forgotPassword = async (req: Request, res: Response, next: NextFunc
         res.status(200).json({success: true, message: 'Email de réinitialisation envoyé.'});
 
     } catch (error) {
+<<<<<<< HEAD
+=======
+        // En cas d'erreur de base de données ou de jeton, la fonction la passe au middleware d'erreur
+>>>>>>> b13ebdf (add crud menu)
         next(error);
     }
 };
@@ -198,6 +304,7 @@ export const resetPassword = async (req: Request, res: Response, next: NextFunct
         const {token} = req.params;
         const {newPassword} = req.body;
 
+<<<<<<< HEAD
         // 1. Valider le nouveau mot de passe (réutiliser la regex du modèle)
         if (!newPassword || !/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(newPassword)) {
             return next(new ErrorResponse("Le nouveau mot de passe est invalide (8 chars min, lettre et chiffre).", 400));
@@ -210,11 +317,21 @@ export const resetPassword = async (req: Request, res: Response, next: NextFunct
             WHERE resetPasswordToken = ?
               AND resetPasswordExpiresAt > datetime('now')
         `, [token]);
+=======
+        // Validation du mot de passe
+        if (!newPassword || newPassword.length < 8) {
+            return next(new ErrorResponse("Le nouveau mot de passe est invalide (8 chars min).", 400));
+        }
+
+        // Chercher l'utilisateur par token et expiration (Requête préparée sécurisée)
+        const user = await dbGet<IUser>(`SELECT * FROM Users WHERE resetPasswordToken = ? AND resetPasswordExpiresAt > datetime('now')`, [token]);
+>>>>>>> b13ebdf (add crud menu)
 
         if (!user) {
             return next(new ErrorResponse("Token de réinitialisation invalide ou expiré.", 400));
         }
 
+<<<<<<< HEAD
         // 3. Hacher et mettre à jour le mot de passe, et effacer les tokens
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(newPassword, salt);
@@ -234,11 +351,34 @@ export const resetPassword = async (req: Request, res: Response, next: NextFunct
         if (!updatedUser) return next(new ErrorResponse("Utilisateur introuvable.", 404));
 
         sendTokenResponse(updatedUser, 200, res); // Connexion automatique
+=======
+        // Hacher le nouveau mot de passe
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+        // Mise à jour du mot de passe et effacement des tokens (méthode sécurisée)
+        await UserModels.updateTokenFields(user.id!, {
+            password: hashedPassword, // Le modèle peut gérer le hachage si on lui envoie 'newPassword', mais ici on gère le hachage avant l'appel.
+            resetPasswordToken: null,
+            resetPasswordExpiresAt: null,
+            updatedAt: new Date().toISOString()
+        });
+
+        // Récupérer l'utilisateur mis à jour
+        const updatedUser = await UserModels.findById(user.id!);
+        if (!updatedUser) return next(new ErrorResponse("Utilisateur introuvable.", 404));
+
+        sendTokenResponse(updatedUser, 200, res);
+>>>>>>> b13ebdf (add crud menu)
 
     } catch (error) {
         next(error);
     }
 };
+<<<<<<< HEAD
+=======
+
+>>>>>>> b13ebdf (add crud menu)
 /**
  * @desc    Déconnecter l'utilisateur (Logout).
  * @route   POST /api/v1/auth/logout
@@ -246,6 +386,7 @@ export const resetPassword = async (req: Request, res: Response, next: NextFunct
  */
 export const logout = async (req: Request, res: Response, next: NextFunction) => {
     try {
+<<<<<<< HEAD
         if (!req.user || !req.user.id) {
             // Should not happen if 'protect' middleware is used, but for safety
             return next(new ErrorResponse("Aucun utilisateur connecté.", 401));
@@ -269,6 +410,24 @@ export const logout = async (req: Request, res: Response, next: NextFunction) =>
             success: true,
             data: {},
             message: "Déconnexion réussie. Le token doit être supprimé côté client. 👋"
+=======
+        const userId = (req as any).user?.id;
+
+        if (!userId) {
+            return next(new ErrorResponse("Non autorisé.", 401));
+        }
+
+        // Optionnel : Mettre à jour la date de dernière activité
+        await UserModels.updateTokenFields(userId, {
+            updatedAt: new Date().toISOString()
+        });
+
+        logger.info(`User ID ${userId} logged out.`);
+
+        res.status(200).json({
+            success: true,
+            message: "Déconnexion réussie."
+>>>>>>> b13ebdf (add crud menu)
         });
 
     } catch (error) {

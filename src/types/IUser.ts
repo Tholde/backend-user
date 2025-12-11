@@ -1,5 +1,8 @@
+<<<<<<< HEAD
 // /src/types/IUser.ts
 
+=======
+>>>>>>> b13ebdf (add crud menu)
 export interface IUser {
     id?: number;
     firstname: string; // au moins 2 lettres
@@ -12,9 +15,15 @@ export interface IUser {
     resetPasswordExpiresAt: Date | null;
     verificationToken: string | null;
     verificationExpiresAt: Date | null;
+<<<<<<< HEAD
     lastLogin?: Date | null; // dernier heure de click logout
     createdAt?: string; // date fixe (généralement TEXT dans SQLite)
     updatedAt?: Date; // lorsqu'il fait le modification, la date change
+=======
+    lastLogin?: string; // dernier heure de click logout
+    createdAt?: string; // date fixe (généralement TEXT dans SQLite)
+    updatedAt?: string; // lorsqu'il fait le modification, la date change
+>>>>>>> b13ebdf (add crud menu)
 }
 
 // Interface pour le modèle sans le mot de passe hashé

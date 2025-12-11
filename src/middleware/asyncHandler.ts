@@ -1,5 +1,8 @@
+<<<<<<< HEAD
 // src/middleware/asyncHandler.ts
 
+=======
+>>>>>>> b13ebdf (add crud menu)
 import { Request, Response, NextFunction } from 'express';
 
 // Define a type for the async controller function

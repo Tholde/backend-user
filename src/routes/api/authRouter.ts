@@ -52,7 +52,11 @@ const authRouter = Router();
  *       400:
  *         description: Invalid input
  */
+<<<<<<< HEAD
 authRouter.post('/auth/register', asyncHandler(register));
+=======
+authRouter.post('/register', register);
+>>>>>>> b13ebdf (add crud menu)
 /**
  * @swagger
  * /api/v1/auth/verification:
@@ -77,7 +81,11 @@ authRouter.post('/auth/register', asyncHandler(register));
  *       400:
  *         description: Invalid input
  */
+<<<<<<< HEAD
 authRouter.get('/auth/verifyemail/:token', asyncHandler(verifyEmail));
+=======
+authRouter.get('/verifyemail/:token', verifyEmail);
+>>>>>>> b13ebdf (add crud menu)
 /**
  * @swagger
  * /api/v1/auth/signin:
@@ -106,7 +114,11 @@ authRouter.get('/auth/verifyemail/:token', asyncHandler(verifyEmail));
  *       400:
  *         description: Invalid input
  */
+<<<<<<< HEAD
 authRouter.post('/auth/login', asyncHandler(login));
+=======
+authRouter.post('/login', login);
+>>>>>>> b13ebdf (add crud menu)
 /**
  * @swagger
  * /api/v1/auth/forgetPassword:
@@ -131,7 +143,11 @@ authRouter.post('/auth/login', asyncHandler(login));
  *       400:
  *         description: Invalid input
  */
+<<<<<<< HEAD
 authRouter.post('/auth/forgotpassword', asyncHandler(forgotPassword));
+=======
+authRouter.post('/forgotpassword', asyncHandler(forgotPassword));
+>>>>>>> b13ebdf (add crud menu)
 // /**
 //  * @swagger
 //  * /api/v1/auth/verificationResetPassword:
@@ -185,7 +201,11 @@ authRouter.post('/auth/forgotpassword', asyncHandler(forgotPassword));
  *       400:
  *         description: Invalid input
  */
+<<<<<<< HEAD
 authRouter.put('/auth/resetpassword/:token', asyncHandler(resetPassword));
+=======
+authRouter.put('/resetpassword/:token', resetPassword);
+>>>>>>> b13ebdf (add crud menu)
 /**
  * @swagger
  * /api/v1/auth/logout:
@@ -196,6 +216,10 @@ authRouter.put('/auth/resetpassword/:token', asyncHandler(resetPassword));
  *       200:
  *         description: User logged out successfully
  */
+<<<<<<< HEAD
 authRouter.post('/auth/logout', protect, asyncHandler(logout));
+=======
+authRouter.post('/logout', protect,logout);
+>>>>>>> b13ebdf (add crud menu)
 
 export default authRouter;

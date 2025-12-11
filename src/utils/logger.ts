@@ -1,5 +1,8 @@
+<<<<<<< HEAD
 // /src/utils/logger.ts
 
+=======
+>>>>>>> b13ebdf (add crud menu)
 /**
  * Un simple logger pour les événements du serveur.
  */

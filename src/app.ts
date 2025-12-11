@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // import express, {Request, Response, NextFunction} from "express";
 // import router from "./routes/router";
 // import dotenv from "dotenv";
@@ -68,6 +69,8 @@
 // }
 // /src/server.ts
 
+=======
+>>>>>>> b13ebdf (add crud menu)
 import 'dotenv/config'; // Pour charger les variables d'environnement
 import express from 'express';
 import router from "./routes/router";
@@ -92,7 +95,11 @@ if (!process.env.JWT_SECRET) {
     // process.exit(1);
 }
 
+<<<<<<< HEAD
 const PORT = process.env.PORT || 5000;
+=======
+const PORT = process.env.PORT || 3000;
+>>>>>>> b13ebdf (add crud menu)
 
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
 
@@ -122,7 +129,13 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Montage des routes
 app.use('/api/v1', router);
+<<<<<<< HEAD
 
+=======
+app.get('/', (req, res) => {
+  res.send('API is running...');
+});
+>>>>>>> b13ebdf (add crud menu)
 // Gestionnaire d'erreurs (doit être le dernier middleware)
 app.use(errorHandler);
 

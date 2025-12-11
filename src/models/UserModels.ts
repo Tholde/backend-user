@@ -1,5 +1,8 @@
+<<<<<<< HEAD
 // /src/models/UserModel.ts
 
+=======
+>>>>>>> b13ebdf (add crud menu)
 import { IUser, IUserPublic } from '../types/IUser';
 import {dbRun, dbGet, dbAll} from "../database/SQLiteConnection";
 import * as bcrypt from 'bcryptjs';
@@ -49,7 +52,11 @@ class UserModel {
             const hashedPassword = await bcrypt.hash(userData.password, salt);
 
            const sql = `
+<<<<<<< HEAD
                 INSERT INTO User (firstname, lastname, email, password, roleUser, isActive, verificationToken, verificationExpiresAt)
+=======
+                INSERT INTO Users (firstname, lastname, email, password, roleUser, isActive, verificationToken, verificationExpiresAt)
+>>>>>>> b13ebdf (add crud menu)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)
             `;
             const params = [
@@ -59,7 +66,11 @@ class UserModel {
                 hashedPassword,
                 userData.roleUser || 'employee',
                 0,
+<<<<<<< HEAD
                 token, // <-- USE RENAMED PARAMETER 'token' here
+=======
+                token,
+>>>>>>> b13ebdf (add crud menu)
                 expiresAt.toISOString(),
             ];
 
@@ -86,7 +97,11 @@ class UserModel {
      * Trouve un utilisateur par son ID.
      */
     async findById(id: number): Promise<IUser | undefined> {
+<<<<<<< HEAD
         const sql = 'SELECT * FROM User WHERE id = ?';
+=======
+        const sql = 'SELECT * FROM Users WHERE id = ?';
+>>>>>>> b13ebdf (add crud menu)
         return dbGet<IUser>(sql, [id]);
     }
 
@@ -94,7 +109,11 @@ class UserModel {
      * Trouve un utilisateur par email.
      */
     async findByEmail(email: string): Promise<IUser | undefined> {
+<<<<<<< HEAD
         const sql = 'SELECT * FROM User WHERE email = ?';
+=======
+        const sql = 'SELECT * FROM Users WHERE email = ?';
+>>>>>>> b13ebdf (add crud menu)
         return dbGet<IUser>(sql, [email]);
     }
 
@@ -115,7 +134,11 @@ class UserModel {
 
         if (setClauses.length === 0) return;
 
+<<<<<<< HEAD
         const sql = `UPDATE User SET ${setClauses.join(', ')} WHERE id = ?`;
+=======
+        const sql = `UPDATE Users SET ${setClauses.join(', ')} WHERE id = ?`;
+>>>>>>> b13ebdf (add crud menu)
         // Now, pushing 'id' (number) is allowed
         params.push(id);
 
@@ -126,7 +149,11 @@ class UserModel {
      * Lit tous les utilisateurs (pour les admins/démo).
      */
     async findAll(): Promise<IUserPublic[]> {
+<<<<<<< HEAD
         const sql = 'SELECT id, firstname, lastname, email, roleUser, isActive, lastLogin, createdAt, updatedAt FROM User';
+=======
+        const sql = 'SELECT id, firstname, lastname, email, roleUser, isActive, lastLogin, createdAt, updatedAt FROM Users';
+>>>>>>> b13ebdf (add crud menu)
         return dbAll<IUserPublic>(sql);
     }
 
@@ -138,7 +165,11 @@ class UserModel {
     async search(query: string): Promise<IUserPublic[]> {
         const sql = `
             SELECT id, firstname, lastname, email, roleUser, isActive, lastLogin, createdAt, updatedAt
+<<<<<<< HEAD
             FROM User
+=======
+            FROM Users
+>>>>>>> b13ebdf (add crud menu)
             WHERE firstname LIKE ? OR lastname LIKE ? OR email LIKE ?
         `;
         const searchParam = `%${query}%`;
@@ -200,7 +231,11 @@ class UserModel {
      * Supprime un utilisateur par ID.
      */
     async delete(id: number): Promise<void> {
+<<<<<<< HEAD
         const sql = 'DELETE FROM User WHERE id = ?';
+=======
+        const sql = 'DELETE FROM Users WHERE id = ?';
+>>>>>>> b13ebdf (add crud menu)
         const res = await dbRun(sql, [id]);
         if (res.changes === 0) {
             throw new ErrorResponse(`Utilisateur avec ID ${id} non trouvé.`, 404);

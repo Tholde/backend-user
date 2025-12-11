@@ -1,7 +1,11 @@
 import {Router} from 'express';
 import {authorize, protect} from "../../middleware/auth";
 import asyncHandler from "../../middleware/asyncHandler";
+<<<<<<< HEAD
 import {createUserByAdmin, deleteUser, getUser, updateUser} from "../../controllers/UserController";
+=======
+import {createUser, deleteUser, getAllUsers, getUserById, updateMe} from "../../controllers/UserController";
+>>>>>>> b13ebdf (add crud menu)
 
 const userRouter = Router();
 /**
@@ -51,7 +55,11 @@ const userRouter = Router();
  *       400:
  *         description: Invalid input
  */
+<<<<<<< HEAD
 userRouter.post('/users', protect, authorize('admin'), asyncHandler(createUserByAdmin));
+=======
+userRouter.post('/', protect, authorize('admin'), createUser);
+>>>>>>> b13ebdf (add crud menu)
 /**
  * @swagger
  * /api/v1/users/:
@@ -62,7 +70,11 @@ userRouter.post('/users', protect, authorize('admin'), asyncHandler(createUserBy
  *       200:
  *         description: List of users
  */
+<<<<<<< HEAD
 userRouter.get('/users', protect, asyncHandler(getUser));
+=======
+userRouter.get('/', protect, authorize('admin'), getAllUsers);
+>>>>>>> b13ebdf (add crud menu)
 /**
  * @swagger
  * /api/v1/users/{id}:
@@ -80,7 +92,11 @@ userRouter.get('/users', protect, asyncHandler(getUser));
  *       200:
  *         description: A single user
  */
+<<<<<<< HEAD
 userRouter.get('/users/:id', protect, asyncHandler(getUser));
+=======
+userRouter.get('/:id', protect, getUserById);
+>>>>>>> b13ebdf (add crud menu)
 /**
  * @swagger
  * /api/v1/users/{id}:
@@ -124,7 +140,11 @@ userRouter.get('/users/:id', protect, asyncHandler(getUser));
  *       400:
  *         description: Invalid input
  */
+<<<<<<< HEAD
 userRouter.put('/users/:id', protect, asyncHandler(updateUser));
+=======
+userRouter.put('/:id', protect, updateMe);
+>>>>>>> b13ebdf (add crud menu)
 /**
  * @swagger
  * /api/v1/users/{id}:
@@ -144,6 +164,10 @@ userRouter.put('/users/:id', protect, asyncHandler(updateUser));
  *       400:
  *         description: User not found.
  */
+<<<<<<< HEAD
 userRouter.delete('/users/:id', protect, authorize('admin'), asyncHandler(deleteUser));
+=======
+userRouter.delete('/:id', protect, authorize('admin'), asyncHandler(deleteUser));
+>>>>>>> b13ebdf (add crud menu)
 
 export default userRouter;

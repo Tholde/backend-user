@@ -1,5 +1,8 @@
+<<<<<<< HEAD
 // /src/middleware/error.ts
 
+=======
+>>>>>>> b13ebdf (add crud menu)
 import { Request, Response, NextFunction } from 'express';
 import { ErrorResponse } from '../utils/ErrorResponse';
 import logger from '../utils/logger';

@@ -1,6 +1,10 @@
 import express, {Router} from 'express';
 import authRouter from "./api/authRouter";
 import userRouter from "./api/userRouter";
+<<<<<<< HEAD
+=======
+import menuRoute from "./api/menuRoute";
+>>>>>>> b13ebdf (add crud menu)
 
 
 const router = Router();
@@ -17,7 +21,16 @@ const router = Router();
 //     }
 //     return next();
 // })
+<<<<<<< HEAD
 router.use('/', authRouter, userRouter);
+=======
+// router.use('/', authRouter, userRouter, menuRoute);
+
+// Monte chaque routeur sur son préfixe propre
+router.use('/auth', authRouter);
+router.use('/users', userRouter);
+router.use('/menus', menuRoute);
+>>>>>>> b13ebdf (add crud menu)
 export default router;
 
 // import express, { Router, Request, Response, NextFunction, RequestHandler } from 'express';
